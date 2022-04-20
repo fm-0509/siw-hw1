@@ -1,18 +1,25 @@
+/* * *
+ * 
+ * SIW - Homework 1 - 20210420
+ * Francesco Martino - 547193
+ * 
+ * * */
+
 package it.uniroma3.siw.model;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 @Entity
 public class Allievo {
-		
+	
+	//utilizzo come chiave primaria la matricola dell'allievo
 	@Id
 	private String matricola;
 
@@ -22,14 +29,16 @@ public class Allievo {
 	private LocalDate dataNascita;
 	
 	private String luogoNascita;
-	
-//	private String matricola;
-	
+		
 	private String email;
 	
-	@OneToOne
+	//qui posso assumere che la strategia di fetch di default (Eager) sia coerente con i casi d'uso:
+	//quando accedo ad un allievo accedo in automatico alla sua societa' di appartenenza
+	@ManyToOne(cascade = {CascadeType.PERSIST})
 	private Societa societa;
 	
+	//qui assumo che non valga la pena modificare la strategia fetch di default (Lazy), perche' nei casi d'uso
+	//non e' specificato che un accesso ad un allievo implichi l'accesso a tutti i suoi corsi frequentati	
 	@ManyToMany(mappedBy = "allieviIscritti")
 	private List<Corso> corsiFrequentati;
 
